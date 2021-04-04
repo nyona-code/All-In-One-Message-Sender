@@ -29,7 +29,7 @@ def validateLogin(username, password):
     return
 
 login = Frame(root)
-#login.place(relwidth=0.6, relheight=0.2, relx=0.2, rely=0.3)
+login.place(relwidth=0.6, relheight=0.2, relx=0.2, rely=0.3)
 
 
 #username label and text entry box
@@ -115,8 +115,7 @@ def save():
     input = textBox.get("1.0",END)
     file = asksaveasfile(filetypes = data, defaultextension = ".txt")
     file.write(input)
-    
-enter()
+
 
 root.mainloop()
 """
