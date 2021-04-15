@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter.filedialog import asksaveasfile
 from functools import partial
 import os
+from emailsender import *
 
 root = Tk()
 root.geometry('500x500')  
@@ -53,16 +54,18 @@ platforms = [
 "Facebook",
 "Twitter",
 "LinkedIn",
-"Instagram"
+"Instagram",
+"Gmail"
 ]
 
 platform = StringVar(root)
 platform.set(platforms[0]) # default value is Facebook
 
-
 def changeOption(*args):
     platform.set(platform.get())
     print ("Platform selected is " + platform.get())
+    if platform.get() == "Gmail":
+        emailsender()
 
 platform.trace('w', changeOption)
 
@@ -111,7 +114,7 @@ def test():
     print("test")
 
 def save():
-    data = [('All tyes(*.*)', '*.*')]
+    data = [('All types(*.*)', '*.*')]
     input = textBox.get("1.0",END)
     file = asksaveasfile(filetypes = data, defaultextension = ".txt")
     file.write(input)
@@ -120,24 +123,16 @@ def save():
 root.mainloop()
 """
 class App:
-
     def __init__(self, master):
-
         frame = tk.Frame(master, height=700, width=700, bg="#263D42")
         frame.pack()
-
         self.newMessage = tk.Button(root, text="New Message", padx=10, pady=5, bg="#263D42", fg="white")
         self.newMessage.pack(side=tk.LEFT)
-
         self.hi_there = tk.Button(frame, text="Hello", command=self.say_hi)
         self.hi_there.pack(side=tk.LEFT)
-
     def say_hi(self):
         print ("hello world")
-
 root = tk.Tk()
-
 app = App(root)
-
 root.mainloop()
 """
