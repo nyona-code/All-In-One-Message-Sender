@@ -156,8 +156,8 @@ def enter():
 
     root.config(menu=menubar)
 
-#def test():
-#    print("test")
+def test():
+    print("test")
 
 def new():
     textBox.delete('1.0', END)
