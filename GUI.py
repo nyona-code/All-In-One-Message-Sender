@@ -156,8 +156,8 @@ def enter():
 
     root.config(menu=menubar)
 
-def test():
-    print("test")
+#def test():
+#    print("test")
 
 def new():
     textBox.delete('1.0', END)
@@ -175,18 +175,4 @@ def save():
 
 
 root.mainloop()
-"""
-class App:
-    def __init__(self, master):
-        frame = tk.Frame(master, height=700, width=700, bg="#263D42")
-        frame.pack()
-        self.newMessage = tk.Button(root, text="New Message", padx=10, pady=5, bg="#263D42", fg="white")
-        self.newMessage.pack(side=tk.LEFT)
-        self.hi_there = tk.Button(frame, text="Hello", command=self.say_hi)
-        self.hi_there.pack(side=tk.LEFT)
-    def say_hi(self):
-        print ("hello world")
-root = tk.Tk()
-app = App(root)
-root.mainloop()
-"""
+
