@@ -1,18 +1,17 @@
 import smtplib, ssl
 from email.message import EmailMessage
 
-def emailsender():
+def gmail(r_address, subject, msg):
 	port = 465  # For SSL
 	smtp_server = "smtp.gmail.com"
 	sender = "cs321testgroup3@gmail.com"
-	print("Default email is cs321testgroup3@gmail.com")
-	receiver = input("Enter the email address of the receiving party: ")
+	password = "Pass!word"
+	receiver = r_address
 	message = EmailMessage()
-	message['Subject'] = input("Subject of your email: ")
+	message['Subject'] = subject
 	message['From'] = sender
 	message['To'] = receiver
-	message.set_content(input("Main Message: "))
-	password = input("Type your password and press enter: ")
+	message.set_content(msg)
 	
 	context = ssl.create_default_context()
 	try:
