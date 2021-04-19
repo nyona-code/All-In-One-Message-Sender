@@ -14,7 +14,22 @@ root.configure(background="#263d42")
 root.grid_rowconfigure(0, weight=1)
 root.grid_columnconfigure(0, weight=1)
 
-textBox = Text(root, bg="white", font=('TimesNewRoman', 12))
+#frame for user input
+userInput = Frame(root)
+textBox = Text(userInput, bg="white", font=('TimesNewRoman', 12))
+
+#email sender input
+email = Entry(userInput, bg="white", font=("TimesNewRoman", 12))
+emailLabel = Label(userInput, text="Recipient")
+
+#body of message input
+userTextLabel = Label(userInput, text="Message")
+userText = StringVar()
+
+#subject line input
+subjectEntry = Entry(userInput, bg="white", font=("TimesNewRoman", 12))
+subjectLabel = Label(userInput, text="Subject")
+subjectText = StringVar()
 
 #-------------Login------------------------------------------------#
 def validateLogin(username, password):
@@ -55,90 +70,81 @@ loginButton = Button(login, text="Login", command=validateLogin).grid(row=4, col
 platforms = [
 "Facebook",
 "Twitter",
-"Instagram",
+"Instagram (.jpg only)",
 "Gmail"
 ]
-
 platform = StringVar(root)
-platform.set(platforms[0]) # default value is Facebook
 
-def changeOption(*args):
-    platform.set(platform.get())
-    print ("Platform selected is " + platform.get())
-    if (platform.get() == "Gmail"):
-        textBox.delete('1.0', END)
-        emailInput()
-    elif (platform.get() == "Facebook"):
-        textBox.delete('1.0', END)
-        facebookInput()
-    elif (platform.get() == "Twitter"):
-        textBox.delete('1.0', END)
-        twitterInput()
-    elif (platform.get() == "Instagram"):
-        textBox.delete('1.0', END)
-        instagramInput()
-        instagramSetup()
-
-platform.trace('w', changeOption) 
-
-
-#--------------------Platform Setup---------------------------------#
-def emailInput():
-    textBox.insert("1.0", "For proper functionality, please type under each prompt.\n")
-    textBox.insert("2.0", "Enter the email address of the receiving party:\n\n")
-    textBox.insert("4.0", "Subject of your email:\n\n")
-    textBox.insert("6.0", "Main Message:\n\n")
-    
-def facebookInput():
-    textBox.insert("1.0", "Please enter your post below:\n")
-
-def twitterInput():
-    textBox.insert("1.0", "Please enter your Tweet below\n")
-
-def instagramInput():
-    textBox.insert("1.0", "*Note: all images uploaded should be jpg*\n")
-    textBox.insert("2.0", "File Opened: None\n")
-    textBox.insert("3.0", "Please enter your caption below\n")
-
-def instagramSetup():
+facebookBox = IntVar()
+facebookButton = Checkbutton(userInput, text="Facebook", variable=facebookBox)
+twitterBox = IntVar()
+twitterButton = Checkbutton(userInput, text="Twitter", variable=twitterBox)
+instagramBox = IntVar()
+def checkInstagram():
     InstaSender.filename = filedialog.askopenfilename(initialdir = "/", title = "Select an image before continuing", filetypes = (("JPGs", "*.jpg*"), ("All files", "*.*")))
-    textBox.delete("2.0", "2.0 lineend")
-    textBox.insert("2.0", "File Opened: " + InstaSender.filename)
+instagramButton = Checkbutton(userInput, text="Instagram", variable=instagramBox, command=checkInstagram)
+gmailBox = IntVar()
+def checkGmail():
+    if (gmailBox.get()):
+        email.configure(state="normal")
+    else:
+        email.configure(state="disabled")
+gmailButton = Checkbutton(userInput, text="G-Mail", variable=gmailBox, command=checkGmail)
+email.configure(state="disabled")
+
+
+
+
 
 #---------------------Post Message------------------------------------------#
 def post():
-    current = platform.get()
-    if (current == "Facebook"):
+    if (facebookBox.get()):
         facebook()
 
-    elif (current == "Gmail"):
-        r_address = textBox.get("3.0", "3.0 lineend")
-        subject = textBox.get("5.0", "5.0 lineend")
-        msg = textBox.get("7.0", "7.0 lineend")
+    if (gmailBox.get()):
+        r_address = email.get()
+        subject = subjectEntry.get()
+        msg = textBox.get("1.0", END)
         emailsender.gmail(r_address, subject, msg)
         textBox.delete("1.0", END)
+        subjectEntry.delete(0, END)
+        email.delete(0, END)
         emailInput()
 
-    elif (current == "Twitter"):
+    if (twitterBox.get()):
         twitter()
 
-    else:
+    if (instagramBox.get()):
         InstaSender.instagram(InstaSender.filename, textBox.get("4.0", "4.0 lineend"))
-        textBox.delete("1.0", END)
-        instagramInput()
-        instagramSetup()
+        instagram()
 
-    print("Posted to " + current)
+    #check if sent folder exists, if not, make it and add post to folder
+    
 
 
 
 
 #--------------------------Build GUI-------------------------------------#
 def enter():
+    #user authenticated
     login.destroy()
-    textBox.place(relwidth=0.8, relheight=0.8, relx=0.1, rely=0.05)
-    newMessage = Button(root, text="Post Message", command=post).grid(row=6, column=0)
-    platformSelect = OptionMenu(root, platform, *platforms).grid(row=5, column=0)
+
+    #establish boxes and labels
+    email.place(relwidth=0.8, relx=0.14, rely=0.01)
+    emailLabel.place(relx=0, rely=0.01)
+    textBox.place(relwidth=0.8, relheight=0.8, relx=0.14, rely=0.14)
+    userInput.place(relwidth=0.9, relheight=0.85, relx=0.05, rely=0.05)
+    userTextLabel.place(relx=0, rely=0.14)
+    subjectEntry.place(relwidth=0.8, relx=0.14, rely=0.07)
+    subjectLabel.place(relx=0, rely=0.07)
+
+    #establish check boxes
+    facebookButton.place(relx=0.08, rely=0.942)
+    twitterButton.place(relx=0.3, rely=0.942)
+    instagramButton.place(relx=0.49, rely=0.942)
+    gmailButton.place(relx=0.73, rely=0.942)
+
+    Button(root, text="Post Message", command=post).grid(row=6, column=0)
     #Menu bar
     menubar = Menu(root)
     filemenu = Menu(menubar, tearoff=0)
@@ -175,4 +181,3 @@ def save():
 
 
 root.mainloop()
-
