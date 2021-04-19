@@ -189,8 +189,8 @@ def browse():
 def save():
     data = [('All types(*.*)', '*.*')]
     input = textBox.get("1.0",END)
-    file = asksaveasfile(filetypes = data, defaultextension = ".txt")
-    file.write(input)
+    newSave = filedialog.asksaveasfile(filetypes = data, defaultextension = ".txt")
+    newSave.write(input)
 
 
 root.mainloop()
