@@ -24,6 +24,8 @@ root.configure(background="#263d42")
 root.grid_rowconfigure(0, weight=1)
 root.grid_columnconfigure(0, weight=1)
 
+Images = []
+
 #frame for user input
 userInput = Frame(root)
 textBox = Text(userInput, bg="white", font=('TimesNewRoman', 12))
@@ -119,10 +121,16 @@ def post():
         emailsender.gmail(r_address, subject, msg)
 
     if (twitterBox.get()):
-        TwitterScript.sendTweet(textBox.get("1.0",END))
+        if len(Images) == 0:
+            TwitterScript.sendTweet(textBox.get("1.0",END))
+        else:
+            TwitterScript.sendTweetImage(textBox.get("1.0",END), Images[0])
 
     if (instagramBox.get()):
         InstaSender.instagram(InstaSender.filename, textBox.get("1.0", END))
+
+    Images.clear()
+    textBox.delete('1.0', END)
 
     #check if sent folder exists, if not, make it and add post to folder
     path = os.path.abspath(os.getcwd())
@@ -138,6 +146,10 @@ def post():
     toDir = os.path.abspath(os.getcwd()) + "/Sent/" + fileName
     shutil.move(fromDir, toDir)
 
+def AddImage():
+    file = filedialog.askopenfilename(initialdir = "/", title = "Browse Files", filetypes = (("Text files", "*.txt*"), ("All files", "*.*")))
+
+    Images.append(file)
 
 #--------------------------Build GUI-------------------------------------#
 def enter():
@@ -160,6 +172,9 @@ def enter():
     gmailButton.place(relx=0.73, rely=0.942)
 
     Button(root, text="Post Message", command=post).grid(row=6, column=0)
+
+    Button(root, text="Add Image", command=AddImage).grid(row=4, column=0)
+
     #Menu bar
     menubar = Menu(root)
     filemenu = Menu(menubar, tearoff=0)
@@ -193,6 +208,5 @@ def save():
     input = textBox.get("1.0",END)
     newSave = filedialog.asksaveasfile(filetypes = data, defaultextension = ".txt")
     newSave.write(input)
-
 
 root.mainloop()
