@@ -7,7 +7,13 @@ def sendTweet(tweetMessage):
 	# .update_status allows us to post tweets
 	api.update_status(tweetMessage)
 
-#def sendTweetImage(tweetMessage, Image):
+def sendTweetImage(tweetMessage, Image):
+	api = auth()
+
+	media = api.media_upload(Image)
+
+	api.update_status(tweetMessage, media_ids=[media.media_id])
+
 
 
 def sendDM():
@@ -49,11 +55,3 @@ def auth():
 		print("User verification failed.")
 
 	return api
-
-
-
-
-
-
-
-
