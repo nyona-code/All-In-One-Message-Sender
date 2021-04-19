@@ -5,6 +5,8 @@ from functools import partial
 import os
 import emailsender
 import InstaSender
+import FacebookScript
+import TwitterScript
 import shutil
 
 #clean existing insta config file, if any
@@ -108,7 +110,7 @@ email.configure(state="disabled")
 #---------------------Post Message------------------------------------------#
 def post():
     if (facebookBox.get()):
-        facebook()
+        FacebookScript.post_message(textBox.get("1.0",END))
 
     if (gmailBox.get()):
         r_address = email.get()
@@ -117,7 +119,7 @@ def post():
         emailsender.gmail(r_address, subject, msg)
 
     if (twitterBox.get()):
-        twitter()
+        TwitterScript.sendTweet(textBox.get("1.0",END))
 
     if (instagramBox.get()):
         InstaSender.instagram(InstaSender.filename, textBox.get("1.0", END))
