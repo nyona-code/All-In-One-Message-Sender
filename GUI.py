@@ -30,6 +30,15 @@ Images = []
 userInput = Frame(root)
 textBox = Text(userInput, bg="white", font=('TimesNewRoman', 12))
 
+#word count
+count = 0
+displayCount = Label(userInput, text=count)
+def charCount(event):
+    global count
+    count = len(textBox.get("1.0", 'end-1c'))
+    displayCount = Label(userInput, text=count)
+    displayCount.place(relx=0, rely=0.58)
+
 #email sender input
 email = Entry(userInput, bg="white", font=("TimesNewRoman", 12))
 emailLabel = Label(userInput, text="Recipient")
@@ -170,6 +179,11 @@ def enter():
     twitterButton.place(relx=0.3, rely=0.942)
     instagramButton.place(relx=0.49, rely=0.942)
     gmailButton.place(relx=0.73, rely=0.942)
+    
+    #character counter
+    wordCounter = Label(userInput, text="Char\nCount")
+    wordCounter.place(relx=0, rely=0.5)
+    textBox.bind('<KeyRelease>', charCount)
 
     Button(root, text="Post Message", command=post).grid(row=6, column=0)
 
