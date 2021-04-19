@@ -200,9 +200,6 @@ def enter():
     menubar.add_cascade(label="File", menu=filemenu)
 
     helpmenu = Menu(menubar, tearoff=0)
-    helpmenu.add_command(label="Help Index", command=test)
-    helpmenu.add_command(label="About...", command=test)
-    menubar.add_cascade(label="Help", menu=helpmenu)
 
     root.config(menu=menubar)
 
