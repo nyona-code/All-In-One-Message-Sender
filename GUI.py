@@ -5,6 +5,14 @@ from functools import partial
 import os
 import emailsender
 import InstaSender
+import shutil
+
+#clean existing insta config file, if any
+configCheck = os.path.abspath(os.getcwd()) + "/config"
+if (os.path.isdir(configCheck)):
+    if (configCheck == "/"):
+        quit()
+    shutil.rmtree(configCheck)
 
 
 root = Tk()
@@ -81,7 +89,8 @@ twitterBox = IntVar()
 twitterButton = Checkbutton(userInput, text="Twitter", variable=twitterBox)
 instagramBox = IntVar()
 def checkInstagram():
-    InstaSender.filename = filedialog.askopenfilename(initialdir = "/", title = "Select an image before continuing", filetypes = (("JPGs", "*.jpg*"), ("All files", "*.*")))
+    if (instagramBox.get()):
+        InstaSender.filename = filedialog.askopenfilename(initialdir = "/", title = "Select an image before continuing", filetypes = (("JPGs", "*.jpg*"), ("All files", "*.*")))
 instagramButton = Checkbutton(userInput, text="Instagram", variable=instagramBox, command=checkInstagram)
 gmailBox = IntVar()
 def checkGmail():
@@ -106,22 +115,26 @@ def post():
         subject = subjectEntry.get()
         msg = textBox.get("1.0", END)
         emailsender.gmail(r_address, subject, msg)
-        textBox.delete("1.0", END)
-        subjectEntry.delete(0, END)
-        email.delete(0, END)
-        emailInput()
 
     if (twitterBox.get()):
         twitter()
 
     if (instagramBox.get()):
-        InstaSender.instagram(InstaSender.filename, textBox.get("4.0", "4.0 lineend"))
-        instagram()
+        InstaSender.instagram(InstaSender.filename, textBox.get("1.0", END))
 
     #check if sent folder exists, if not, make it and add post to folder
-    
-
-
+    path = os.path.abspath(os.getcwd())
+    print(path)
+    path += "/Sent"
+    if (not os.path.isdir(path)):
+        os.mkdir(path)
+    input = textBox.get("1.0",END)
+    fileName = subjectEntry.get()
+    toSave = open(fileName, "w")
+    toSave.write(input)
+    fromDir = os.path.abspath(os.getcwd()) + "/" + fileName
+    toDir = os.path.abspath(os.getcwd()) + "/Sent/" + fileName
+    shutil.move(fromDir, toDir)
 
 
 #--------------------------Build GUI-------------------------------------#
