@@ -151,6 +151,7 @@ def post():
 
     
     Images.clear()
+    imageStatusString.set("No")
     textBox.delete('1.0', END)
 
     #check if sent folder exists, if not, make it and add post to folder
