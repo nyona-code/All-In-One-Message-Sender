@@ -171,7 +171,7 @@ def post():
     messagebox.showinfo("Message sent", confirmMessageText)
 
 def AddImage():
-    file = filedialog.askopenfilename(initialdir = "/", title = "Browse Files", filetypes = (("All files", "*.*"), ("JPGs", "*.jpg*")))
+    file = filedialog.askopenfilename(initialdir = "/", title = "Browse Files", filetypes = (("JPGs", "*.jpg*"), ("All files", "*.*")))
     if (file != ""):
         Images.append(file)
         global imageStatusString
