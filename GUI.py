@@ -120,6 +120,15 @@ email.configure(state="disabled")
 #---------------------Post Message------------------------------------------#
 def post():
     confirmMessageText = "Your message has been sent to"
+    if (instagramBox.get()):
+        if len(Images) == 0:
+            messagebox.showinfo("Error", "Please attach an image to post to Instagram.\nYour message has not been sent.")
+            return
+        else:
+            InstaSender.filename = Images[0]
+        InstaSender.instagram(InstaSender.filename, textBox.get("1.0", END))
+        confirmMessageText += " Instagram"
+        
     if (facebookBox.get()):
         FacebookScript.post_message(textBox.get("1.0",END))
         confirmMessageText += " Facebook,"
@@ -138,19 +147,11 @@ def post():
             TwitterScript.sendTweetImage(textBox.get("1.0",END), Images[0])
         confirmMessageText += " Twitter,"
 
-    if (instagramBox.get()):
-        if len(Images) == 0:
-            messagebox.showinfo("Error", "Please attach an image to post to Instagram.\nYour message has not been sent.")
-            return
-        else:
-            InstaSender.filename = Images[0]
-        InstaSender.instagram(InstaSender.filename, textBox.get("1.0", END))
-        confirmMessageText += " Instagram"
+    
 
     
     Images.clear()
     textBox.delete('1.0', END)
-    subjectEntry.delete('1.0', END)
 
     #check if sent folder exists, if not, make it and add post to folder
     path = os.path.abspath(os.getcwd())
