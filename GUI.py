@@ -127,7 +127,7 @@ def post():
         else:
             InstaSender.filename = Images[0]
         InstaSender.instagram(InstaSender.filename, textBox.get("1.0", END))
-        confirmMessageText += " Instagram"
+        confirmMessageText += " Instagram,"
         
     if (facebookBox.get()):
         FacebookScript.post_message(textBox.get("1.0",END))
