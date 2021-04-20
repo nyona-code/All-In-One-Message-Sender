@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import messagebox
 from functools import partial
 import os
 import emailsender
@@ -31,13 +32,14 @@ userInput = Frame(root)
 textBox = Text(userInput, bg="white", font=('TimesNewRoman', 12))
 
 #word count
-count = 0
-displayCount = Label(userInput, text=count)
+count = IntVar()
+displayCount = Label(userInput, textvariable=count)
 def charCount(event):
     global count
-    count = len(textBox.get("1.0", 'end-1c'))
-    displayCount = Label(userInput, text=count)
-    displayCount.place(relx=0, rely=0.58)
+    count.set(len(textBox.get("1.0", 'end-1c')))
+
+#image status
+imageStatusString = StringVar()
 
 #email sender input
 email = Entry(userInput, bg="white", font=("TimesNewRoman", 12))
@@ -101,10 +103,7 @@ facebookButton = Checkbutton(userInput, text="Facebook", variable=facebookBox)
 twitterBox = IntVar()
 twitterButton = Checkbutton(userInput, text="Twitter", variable=twitterBox)
 instagramBox = IntVar()
-def checkInstagram():
-    if (instagramBox.get()):
-        InstaSender.filename = filedialog.askopenfilename(initialdir = "/", title = "Select an image before continuing", filetypes = (("JPGs", "*.jpg*"), ("All files", "*.*")))
-instagramButton = Checkbutton(userInput, text="Instagram", variable=instagramBox, command=checkInstagram)
+instagramButton = Checkbutton(userInput, text="Instagram", variable=instagramBox)
 gmailBox = IntVar()
 def checkGmail():
     if (gmailBox.get()):
@@ -120,26 +119,38 @@ email.configure(state="disabled")
 
 #---------------------Post Message------------------------------------------#
 def post():
+    confirmMessageText = "Your message has been sent to"
     if (facebookBox.get()):
         FacebookScript.post_message(textBox.get("1.0",END))
+        confirmMessageText += " Facebook,"
 
     if (gmailBox.get()):
         r_address = email.get()
         subject = subjectEntry.get()
         msg = textBox.get("1.0", END)
         emailsender.gmail(r_address, subject, msg)
+        confirmMessageText += " Gmail,"
 
     if (twitterBox.get()):
         if len(Images) == 0:
             TwitterScript.sendTweet(textBox.get("1.0",END))
         else:
             TwitterScript.sendTweetImage(textBox.get("1.0",END), Images[0])
+        confirmMessageText += " Twitter,"
 
     if (instagramBox.get()):
+        if len(Images) == 0:
+            messagebox.showinfo("Error", "Please attach an image to post to Instagram.\nYour message has not been sent.")
+            return
+        else:
+            InstaSender.filename = Images[0]
         InstaSender.instagram(InstaSender.filename, textBox.get("1.0", END))
+        confirmMessageText += " Instagram"
 
+    
     Images.clear()
     textBox.delete('1.0', END)
+    subjectEntry.delete('1.0', END)
 
     #check if sent folder exists, if not, make it and add post to folder
     path = os.path.abspath(os.getcwd())
@@ -154,10 +165,14 @@ def post():
     fromDir = os.path.abspath(os.getcwd()) + "/" + fileName
     toDir = os.path.abspath(os.getcwd()) + "/Sent/" + fileName
     shutil.move(fromDir, toDir)
+    #pop up window that auto closes to confirm message is sent 
+    confirmMessageText += "!"
+    messagebox.showinfo("Message sent", confirmMessageText)
 
 def AddImage():
-    file = filedialog.askopenfilename(initialdir = "/", title = "Browse Files", filetypes = (("Text files", "*.txt*"), ("All files", "*.*")))
-
+    file = filedialog.askopenfilename(initialdir = "/", title = "Browse Files", filetypes = (("JPGs", "*.jpg*"), ("All files", "*.*")))
+    global imageStatusString
+    imageStatusString.set("Yes")
     Images.append(file)
 
 #--------------------------Build GUI-------------------------------------#
@@ -182,8 +197,16 @@ def enter():
     
     #character counter
     wordCounter = Label(userInput, text="Char\nCount")
-    wordCounter.place(relx=0, rely=0.5)
+    wordCounter.place(relx=0, rely=0.4)
+    displayCount.place(relx=0, rely=0.48)
     textBox.bind('<KeyRelease>', charCount)
+
+    #image attached confirmation
+    imageLabel = Label(userInput, text="Image\nAttached")
+    imageLabel.place(relx=0, rely=0.7)
+    imageStatusString.set("No")
+    imageStatus = Label(userInput, textvariable=imageStatusString)
+    imageStatus.place(rely=0.8)
 
     Button(root, text="Post Message", command=post).grid(row=6, column=0)
 
