@@ -234,7 +234,7 @@ def new():
     textBox.delete('1.0', END)
 
 def browse():
-    filename = filedialog.askopenfilename(initialdir = "/", title = "Browse Files", filetypes = (("Text files", "*.txt*"), ("All files", "*.*")))
+    filename = filedialog.askopenfilename(initialdir = "/", title = "Browse Files", filetypes = (("All files", "*.*"), ("Text files", "*.txt*")))
     with open(filename, 'r') as file:
         textBox.insert(INSERT, file.read())
 
