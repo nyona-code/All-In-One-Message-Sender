@@ -171,9 +171,11 @@ def post():
 
 def AddImage():
     file = filedialog.askopenfilename(initialdir = "/", title = "Browse Files", filetypes = (("JPGs", "*.jpg*"), ("All files", "*.*")))
-    global imageStatusString
-    imageStatusString.set("Yes")
-    Images.append(file)
+    print (file)
+    if (file != ""):
+        Images.append(file)
+        global imageStatusString
+        imageStatusString.set("Yes")
 
 #--------------------------Build GUI-------------------------------------#
 def enter():
